@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUMBE | Trivia Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.0/build/three.module.js"
+        }
+      }
+    </script>
+</head>
+<body>
+
+    <canvas id="bg"></canvas>
+
+    <main>
+        <header>
+            <h1>HUMBE</h1>
+            <p>El Poeta de la Nueva Generación</p>
+        </header>
+        
+        <section id="start-screen" class="glass-panel centered-panel">
+            <h2>PON A PRUEBA TU ESENCIA</h2>
+            <p class="intro-text">¿Qué tanto sabes de la música, los álbumes y la carrera de Humbe? ¡10 preguntas te esperan!</p>
+            <button id="start-btn" class="btn-primary">
+                Comenzar Trivia
+            </button>
+        </section>
+
+        <section id="info-panel" class="glass-panel info-layout hidden">
+            <h3 class="info-title">DATO CURIOSO</h3>
+            <div id="info-content-box">
+                <p id="info-text">Responde la pregunta para desbloquear la historia detrás de la canción o el dato.</p>
+            </div>
+            <div class="visual-decoration">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </section>
+
+        <section id="quiz-container" class="glass-panel quiz-layout hidden">
+            
+            <div id="game-ui">
+                <div class="header-quiz">
+                    <div class="progress">Pregunta <span id="current-q">1</span> / 10</div>
+                    <div class="timer-line"></div>
+                </div>
+                
+                <h2 id="question-text">Cargando pregunta...</h2>
+                
+                <div class="options-grid" id="options-container">
+                    </div>
+                
+                <p id="feedback-msg" class="feedback hidden"></p>
+            </div>
+
+            <div id="results-ui" class="hidden">
+                <h2>¡Trivia Completada!</h2>
+                
+                <div class="score-circle">
+                    <span id="final-score">0</span>
+                    <span class="total">/10</span>
+                </div>
+
+                <h3 id="final-rank">RANGO: FAN CASUAL</h3>
+                <p id="final-message">Mensaje de resultado</p>
+
+                <div class="results-summary" id="results-list">
+                    </div>
+
+                <button onclick="location.reload()" class="btn-primary">Volver a intentar</button>
+            </div>
+        </section>
+
+        <audio id="game-audio"></audio>
+    </main>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

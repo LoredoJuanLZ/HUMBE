@@ -1,0 +1,357 @@
+:root {
+  --bg-color: #1a0b2e;
+  --text-color: #ffffff;
+  --accent: #b66dff;
+  --success: #00ff88;
+  --error: #ff3333;
+  --glass-bg: rgba(20, 10, 40, 0.65);
+  --glass-border: rgba(182, 109, 255, 0.3);
+  --font: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  overflow: hidden; 
+  height: 100vh;
+}
+
+/* 3D Canvas al fondo */
+canvas#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+main {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* Eliminamos flex center global para permitir layouts absolutos */
+  display: block; 
+  padding: 2rem;
+  z-index: 10;
+}
+
+header {
+  position: absolute;
+  top: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 20;
+  pointer-events: none; /* Dejar pasar clicks si algo queda abajo */
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #fff, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  text-shadow: 0 0 20px rgba(182, 109, 255, 0.5);
+}
+
+header p {
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  color: #d8b4fe;
+  text-transform: uppercase;
+}
+
+/* Panel Glassmorphism Base */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transition: all 0.5s ease;
+}
+
+/* Pantalla de inicio centrada */
+.centered-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 500px;
+    text-align: center;
+    width: 100%;
+}
+
+/* --- LAYOUTS LATERALES --- */
+
+/* Panel Izquierdo (Información) */
+.info-layout {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px; /* Ancho fijo para mantener simetría */
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-title {
+    color: var(--accent);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.5rem;
+}
+
+#info-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+/* Decoración visual (barras animadas) */
+.visual-decoration {
+    display: flex;
+    gap: 5px;
+    margin-top: 1.5rem;
+    height: 20px;
+    align-items: flex-end;
+}
+.bar {
+    width: 4px;
+    background: var(--accent);
+    animation: bounce 1s infinite alternate;
+}
+.bar:nth-child(2) { animation-delay: 0.2s; height: 15px; }
+.bar:nth-child(3) { animation-delay: 0.4s; height: 10px; }
+
+@keyframes bounce {
+    from { height: 5px; opacity: 0.5; }
+    to { height: 25px; opacity: 1; }
+}
+
+/* Panel Derecho (Trivia) */
+.quiz-layout {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 450px;
+    max-width: 90%;
+}
+
+/* --- ESTILOS DE JUEGO --- */
+
+.progress {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 0.5rem;
+}
+
+#question-text {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Una columna se ve mejor en diseño lateral */
+  gap: 0.8rem;
+}
+
+button.option-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  padding: 1rem;
+  border-radius: 12px;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s;
+}
+
+button.option-btn:hover:not(:disabled) {
+  background: rgba(182, 109, 255, 0.2);
+  padding-left: 1.5rem; /* Efecto de desplazamiento */
+  border-color: var(--accent);
+}
+
+button.option-btn.correct {
+  background: var(--success) !important;
+  color: #000;
+  border-color: var(--success);
+  font-weight: bold;
+}
+
+button.option-btn.wrong {
+  background: var(--error) !important;
+  border-color: var(--error);
+  opacity: 0.5;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: var(--bg-color);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 800;
+    margin-top: 1.5rem;
+    box-shadow: 0 0 15px var(--accent);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 25px var(--accent);
+    transform: scale(1.02);
+}
+
+/* --- RESULTADOS COMPLETOS --- */
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem auto;
+    background: rgba(0,0,0,0.2);
+    box-shadow: 0 0 20px rgba(182, 109, 255, 0.3);
+}
+
+.score-circle span { font-size: 3rem; font-weight: 800; }
+.score-circle span.total { font-size: 1.2rem; color: #aaa; margin-top: 10px;}
+
+#final-rank {
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+#final-message {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: #ddd;
+}
+
+/* Lista scrollable de resultados */
+.results-summary {
+    max-height: 200px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Scrollbar personalizada */
+.results-summary::-webkit-scrollbar { width: 6px; }
+.results-summary::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+}
+.summary-item.correct-item { color: var(--success); }
+.summary-item.wrong-item { color: var(--error); }
+.summary-icon { font-weight: bold; margin-right: 10px;}
+
+.hidden { display: none !important; }
+
+/* --- RESPONSIVIDAD --- */
+
+@media (max-width: 1024px) {
+    /* Tablet y Laptop pequeña: El panel de info sube, el quiz baja */
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 15vh;
+        overflow-y: auto;
+    }
+
+    .info-layout, .quiz-layout {
+        position: relative;
+        left: auto; right: auto; top: auto;
+        transform: none;
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 1rem;
+    }
+
+    .info-layout {
+        min-height: auto;
+        order: 1; /* Info arriba */
+    }
+    .quiz-layout {
+        order: 2; /* Quiz abajo */
+    }
+    
+    header { top: 2vh; }
+    h1 { font-size: 3rem; }
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 2.5rem; }
+    .glass-panel { padding: 1.5rem; }
+    
+    /* En móvil ocultamos la decoración visual para ahorrar espacio */
+    .visual-decoration { display: none; }
+    
+    .score-circle { width: 100px; height: 100px; }
+    .score-circle span { font-size: 2.5rem; }
+}
+/* --- ANIMACIONES DE TRANSICIÓN --- */
+
+/* Estado de salida (Se va a la izquierda y desaparece) */
+.content-exit {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.5s ease-in-out;
+}
+
+/* Estado de entrada (Entra desde la derecha) */
+.content-enter {
+    animation: slideInRight 0.6s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
